@@ -16,7 +16,7 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('dist', function() {
-    return gulp.src('./app/**/*.js')
+    return gulp.src(['./app/assets/js/vendor.js','./app/**/*.js'])
         .pipe(concat('all.js'))
         .pipe(uglify())
         .pipe(gulp.dest('./dist/'));
