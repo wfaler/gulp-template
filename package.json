@@ -1,0 +1,36 @@
+{
+    "name": "myapp",
+    "version": "0.0.0",
+    "dependencies": {},
+    "devDependencies": {
+        "gulp":"*",
+        "gulp-bower":"*",
+        "gulp-connect":"*",
+        "gulp-karma":"*",
+        "gulp-concat-vendor":"*",
+        "gulp-watch":"*",
+        "gulp-uglify":"*",
+        "gulp-concat":"*",
+        "gulp-jshint":"*",
+        "gulp-karma": "0.0.4",
+        "jasmine-core": "^2.2.0",
+        "jshint-stylish": "~0.1.3",
+        "karma": "^0.12.31",
+        "karma-chrome-launcher": "~0.1.2",
+        "karma-coffee-preprocessor": "~0.1.2",
+        "karma-firefox-launcher": "~0.1.3",
+        "karma-html2js-preprocessor": "~0.1.0",
+        "karma-jasmine": "^0.3.5",
+        "karma-phantomjs-launcher": "~0.1.2",
+        "karma-requirejs": "~0.2.1",
+        "karma-script-launcher": "~0.1.0",
+        "phantomjs": "^1.9.16",
+        "requirejs": "~2.1.10"
+    },
+    "engines": {
+        "node": ">=0.8.0"
+    },
+    "scripts": {
+        "test": "gulp test"
+    }
+}
