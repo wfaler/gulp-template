@@ -47,7 +47,7 @@ gulp.task('test',['jshint'], function (done) {
 });
 
 gulp.task('vendor', function() {
-    gulp.src('./bower_components/*')
+    return gulp.src('./bower_components/*')
         .pipe(vendor('vendor.js'))
         .pipe(gulp.dest('./app/assets/js/'));  
 });
