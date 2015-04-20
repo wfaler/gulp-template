@@ -30,8 +30,8 @@ gulp.task('bower', function() {
 gulp.task('serve', ['vendor'], function() {
     connect.server({
         root: 'app',
-        port: 8000,
-        livereload: true
+        port: 8000
+//        livereload: true
     });
     watch('app/**/*.*', function () {
         connect.reload();

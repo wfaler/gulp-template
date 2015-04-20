@@ -1,7 +1,9 @@
 var Bowler = new function() {
     var templateCache = {};
     var nsSelf = this;
-
+    var components = {};
+    var componentCache = {};
+    
     this.guid = function(){
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
@@ -42,8 +44,6 @@ var Bowler = new function() {
         };
         return obj;
     };
-
-
     
     this.formAction = function(form,fn){
         var formVals = {};
@@ -85,28 +85,29 @@ var Bowler = new function() {
         });
         fn(formVals);
     };
+
     
-    
+    // dont re-add submit handlers
     this.render = function(root){
         if(root === null || root === undefined){
             root = jQuery( ":root" );
         }
-        var forms = jQuery(root).find('form');
-        this.map(forms, function(f){
+        this.renderComponents(root);
+        
+        this.map(jQuery(root).find('form'), function(f){
             var attr = f.getAttribute('form-action');
             if(attr !== null){
                 var fn = nsSelf.deepValue(window,attr);
                 jQuery(f).submit(function(evt){
                     evt.preventDefault();
                     nsSelf.formAction(f,fn);                 
-             });
+                });
             }       
-    });
+        });
         
         this.map(jQuery(root).find('[repeater]'), function(r){
             var repeatExpr = r.getAttribute('repeater');
-            var values = nsSelf.deepValue(window,repeatExpr)();
-            nsSelf.attachData(r,'repeater')(values);
+            nsSelf.attachData(r,'repeater')(nsSelf.deepValue(window,repeatExpr)());
         });
         
         this.map(jQuery(root).find('[url-repeater]'), function(r){
@@ -114,6 +115,25 @@ var Bowler = new function() {
             jQuery.get(sourceUrl, nsSelf.attachData(r,'url-repeater'));
             
         });
+    };
+
+    this.renderComponents = function(root){
+        this.map(jQuery(root).find('[component-id]'), function(toReplace){
+//            jQuery(toReplace).replaceWith(componentCache[toReplace.getAttribute('component-id')]);
+        });
+        for(var key in components){
+            this.map(jQuery(root).find(key), function(cElem){
+                var dataKey = cElem.getAttribute('data');
+                var context = nsSelf.deepValue(window,dataKey);
+                var component = jQuery.parseHTML(components[key](context));
+                jQuery(component).data('data',context);
+                var uuid = nsSelf.guid();
+                jQuery(component).attr('component-id', uuid);
+                componentCache[uuid] = cElem;
+                jQuery(cElem).replaceWith(component);
+            });
+        }
+
     };
     
     this.attachData = function(dataElement, attribute){
@@ -146,8 +166,18 @@ var Bowler = new function() {
         if(jQuery.isArray(t)){
             this.map(t,this.registerTemplate);
         }else{
-            
+            jQuery.get(t.path, function(data){
+                var template = Handlebars.compile(data);
+                components[t.name] = template;
+            });
         }
+    };
+
+    this.start = function(){
+        $(window.document).ajaxStop(function() {
+            Bowler.render();
+            $(window.document).off();
+        });
     };
     
 };
@@ -173,12 +203,18 @@ MyCtor.prototype.change = function(value) {
     this.element.value = value;
 };
 
+
 var foo = {hello : function(f){
     console.log(f);
 }, repeaterFn: function(){
     return [{fruit: "Apple"},{fruit: "Orange"}];
 }};
 
+var greetings = {greeting: 'howdy partner',greetings: function(){
+    return 'a function greeting';
+}};
 
-Bowler.render();
 
+Bowler.registerTemplate({name: 'foo', path: '/scripts/components/foo.html'});
+
+Bowler.start();
