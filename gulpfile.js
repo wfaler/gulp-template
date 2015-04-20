@@ -34,7 +34,6 @@ gulp.task('serve', ['vendor'], function() {
         livereload: true
     });
     watch('app/**/*.*', function () {
-        console.log('reload');
         connect.reload();
     });
 });

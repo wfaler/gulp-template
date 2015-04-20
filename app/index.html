@@ -9,19 +9,21 @@
   <body>
     <h1>Hello world</h1>
     <div>
-      <form form-action='foo.hello'>
+      <form form-action="foo.hello" id="form">
         <div>
         Name <span><input type="text" name="name"/></span><br/>
         Password <input type="password" name="password"><br/>
         Date <input type="date" name="date"><br/>
-        Radio <input type="radio" name="radio" value="male" checked>Male 
-        <input type="radio" name="radio" value="female">Female<br/>
-        Checkbox <input type="checkbox" name="check" repeater="foo.repeaterFn"/>
+        Radio 
+        <span><input type="radio" name="radio" repeater="foo.repeaterFn">{{fruit}}</span><br/>
+        Checkbox <span><input type="checkbox" name="check" repeater="foo.repeaterFn">{{fruit}}</input></span>
         <br/>
-        Select <select name="select">
-          <option repeater="foo.repeaterFn"/>
-          </select>
-         <br/>
+        <div id="select-div">
+        Select <select name="select" >
+          <option url-repeater="/scripts/fruit.json">{{fruit}}</option>
+        </select>
+        </div>
+        <br/>
         <br/>      <input type="submit" value="Submit">
         <br/>
         </div>
@@ -29,6 +31,9 @@
     </div>
     <input type="text" name="foo" id="foo"/>
 
+    <ul id="list">
+      <li url-repeater="/scripts/fruit.json">{{fruit}}</li>
+    </ul>
     
     <script src="/assets/js/vendor.js"></script>
     <script src="/scripts/main.js"></script>
