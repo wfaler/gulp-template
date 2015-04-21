@@ -87,7 +87,6 @@ var Bowler = new function() {
     };
 
     
-    // dont re-add submit handlers
     this.render = function(root){
         if(root === null || root === undefined){
             root = jQuery( ":root" );
@@ -97,6 +96,7 @@ var Bowler = new function() {
         this.map(jQuery(root).find('form'), function(f){
             var attr = f.getAttribute('form-action');
             if(attr !== null){
+                jQuery(f).unbind('submit');
                 var fn = nsSelf.deepValue(window,attr);
                 jQuery(f).submit(function(evt){
                     evt.preventDefault();
